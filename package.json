@@ -1,6 +1,7 @@
 {
   "name": "kaimono-list-cdk",
   "version": "0.1.0",
+  "type": "module",
   "bin": {
     "kaimono-list-cdk": "bin/kaimono-list-cdk.js"
   },
@@ -14,7 +15,6 @@
     "@types/aws-lambda": "^8.10.153",
     "@types/jest": "^29.5.14",
     "@types/node": "22.7.9",
-    "@types/uuid": "^11.0.0",
     "aws-cdk": "2.1029.4",
     "esbuild": "^0.25.10",
     "jest": "^29.7.0",
