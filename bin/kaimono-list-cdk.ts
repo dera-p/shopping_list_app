@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import * as cdk from 'aws-cdk-lib';
-import { KaimonoListCdkStack } from '../lib/kaimono-list-cdk-stack';
+import { KaimonoListCdkStack } from '../lib/kaimono-list-cdk-stack.js';
 
 const app = new cdk.App();
 new KaimonoListCdkStack(app, 'KaimonoListCdkStack', {

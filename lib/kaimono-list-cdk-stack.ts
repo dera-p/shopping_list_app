@@ -110,26 +110,32 @@ export class KaimonoListCdkStack extends cdk.Stack {
       deployOptions: {
         stageName: 'prod', // デプロイステージ名
       },
-      // CORSを有効にする
-      defaultCorsPreflightOptions: {
-        allowOrigins: apigw.Cors.ALL_ORIGINS, // 本番ではフロントエンドのCloudFront URLに制限する
-        allowMethods: apigw.Cors.ALL_METHODS,
-        allowHeaders: apigw.Cors.DEFAULT_HEADERS,
-      },
     });
+
+    const optionsLambda = new NodejsFunction(this, 'OptionsLambda', {
+      entry: 'lambda/options-handler.ts',
+      handler: 'handler',
+      runtime: lambda.Runtime.NODEJS_18_X,
+    });
+
+    const optionsIntegration = new apigw.LambdaIntegration(optionsLambda);
 
     // 11. API GatewayのパスとLambda関数を紐付け
     // /lists/{listId}
     const listsResource = api.root.addResource('lists');
+    listsResource.addMethod('OPTIONS', optionsIntegration);
     const listIdResource = listsResource.addResource('{listId}');
+    listIdResource.addMethod('OPTIONS', optionsIntegration);
     listIdResource.addMethod('GET', new apigw.LambdaIntegration(apiLambda)); // GET /lists/{listId}
 
     // /lists/{listId}/items
     const itemsResource = listIdResource.addResource('items');
+    itemsResource.addMethod('OPTIONS', optionsIntegration);
     itemsResource.addMethod('POST', new apigw.LambdaIntegration(apiLambda)); // POST /lists/{listId}/items
 
     // /lists/{listId}/items/{itemId}
     const itemIdResource = itemsResource.addResource('{itemId}');
+    itemIdResource.addMethod('OPTIONS', optionsIntegration);
     itemIdResource.addMethod('GET', new apigw.LambdaIntegration(apiLambda)); // GET /lists/{listId}/items/{itemId}
     itemIdResource.addMethod('PUT', new apigw.LambdaIntegration(apiLambda)); // PUT /lists/{listId}/items/{itemId}
     itemIdResource.addMethod('DELETE', new apigw.LambdaIntegration(apiLambda)); // DELETE /lists/{listId}/items/{itemId}

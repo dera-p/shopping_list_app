@@ -4,7 +4,8 @@
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "lib": [
-      "es2022"
+      "es2022",
+      "dom"
     ],
     "declaration": true,
     "strict": true,
@@ -25,6 +26,13 @@
       "./node_modules/@types"
     ]
   },
+  "include": [
+    "bin",
+    "lib",
+    "lambda",
+    "test",
+    "frontend/script.ts"
+  ],
   "exclude": [
     "node_modules",
     "cdk.out"

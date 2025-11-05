@@ -9,24 +9,8 @@ const docClient = DynamoDBDocumentClient.from(client);
 // DynamoDBテーブル名 (環境変数で渡される想定)
 const TABLE_NAME = process.env.TABLE_NAME || 'KaimonoList';
 
-// CORSヘッダー
-const CORS_HEADERS = {
-    'Access-Control-Allow-Origin': '*', // 本番では特定のドメインに制限する
-    'Access-Control-Allow-Headers': 'Content-Type',
-    'Access-Control-Allow-Methods': 'OPTIONS,POST,GET,PUT,DELETE',
-};
-
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     console.log("Received event:", JSON.stringify(event, null, 2));
-
-    // OPTIONSリクエスト（CORSプリフライトリクエスト）への対応
-    if (event.httpMethod === 'OPTIONS') {
-        return {
-            statusCode: 200,
-            headers: CORS_HEADERS,
-            body: JSON.stringify({ message: 'CORS preflight successful' }),
-        };
-    }
 
     try {
         const path = event.path;
@@ -52,7 +36,7 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
         } else {
             return {
                 statusCode: 404,
-                headers: CORS_HEADERS,
+                headers: { 'Access-Control-Allow-Origin': '*' },
                 body: JSON.stringify({ message: 'Not Found' }),
             };
         }
@@ -72,7 +56,7 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
                     const { Items } = await docClient.send(command);
                     return {
                         statusCode: 200,
-                        headers: CORS_HEADERS,
+                        headers: { 'Access-Control-Allow-Origin': '*' },
                         body: JSON.stringify(Items || []),
                     };
                 } else if (!listId && !itemId) {
@@ -80,7 +64,7 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
                     // ここは空で返すか、400エラーが適切
                     return {
                         statusCode: 400,
-                        headers: CORS_HEADERS,
+                        headers: { 'Access-Control-Allow-Origin': '*' },
                         body: JSON.stringify({ message: 'Missing listId for GET operation' }),
                     };
                 } else if (listId && itemId) {
@@ -93,13 +77,13 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
                     if (Item) {
                         return {
                             statusCode: 200,
-                            headers: CORS_HEADERS,
+                            headers: { 'Access-Control-Allow-Origin': '*' },
                             body: JSON.stringify(Item),
                         };
                     } else {
                         return {
                             statusCode: 404,
-                            headers: CORS_HEADERS,
+                            headers: { 'Access-Control-Allow-Origin': '*' },
                             body: JSON.stringify({ message: 'Item not found' }),
                         };
                     }
@@ -125,14 +109,14 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
                     await docClient.send(command);
                     return {
                         statusCode: 201,
-                        headers: CORS_HEADERS,
+                        headers: { 'Access-Control-Allow-Origin': '*' },
                         body: JSON.stringify(newItem),
                     };
                 } else if (!listId) {
                      // リストの新規作成は今回対象外
                     return {
                         statusCode: 400,
-                        headers: CORS_HEADERS,
+                        headers: { 'Access-Control-Allow-Origin': '*' },
                         body: JSON.stringify({ message: 'Missing listId for POST operation on items' }),
                     };
                 }
@@ -160,7 +144,7 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
                     if (updateExpressionParts.length === 0) {
                         return {
                             statusCode: 400,
-                            headers: CORS_HEADERS,
+                            headers: { 'Access-Control-Allow-Origin': '*' },
                             body: JSON.stringify({ message: 'No update parameters provided' }),
                         };
                     }
@@ -180,7 +164,7 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
                     const { Attributes } = await docClient.send(command);
                     return {
                         statusCode: 200,
-                        headers: CORS_HEADERS,
+                        headers: { 'Access-Control-Allow-Origin': '*' },
                         body: JSON.stringify(Attributes),
                     };
                 }
@@ -196,14 +180,14 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
                     await docClient.send(command);
                     return {
                         statusCode: 204, // No Content
-                        headers: CORS_HEADERS,
+                        headers: { 'Access-Control-Allow-Origin': '*' },
                         body: '',
                     };
                 } else if (listId && !itemId) {
                     // リストID指定でリスト全体を削除 (今回は未実装、必要なら追加)
                     return {
                         statusCode: 400,
-                        headers: CORS_HEADERS,
+                        headers: { 'Access-Control-Allow-Origin': '*' },
                         body: JSON.stringify({ message: 'Delete entire list not supported in this version' }),
                     };
                 }
@@ -212,7 +196,7 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
             default:
                 return {
                     statusCode: 405,
-                    headers: CORS_HEADERS,
+                    headers: { 'Access-Control-Allow-Origin': '*' },
                     body: JSON.stringify({ message: 'Method Not Allowed' }),
                 };
         }
@@ -220,7 +204,7 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
         console.error("Error:", error);
         return {
             statusCode: 500,
-            headers: CORS_HEADERS,
+            headers: { 'Access-Control-Allow-Origin': '*' },
             body: JSON.stringify({ message: error.message || 'Internal Server Error' }),
         };
     }
@@ -228,7 +212,7 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
     // ここに到達しないはずだが、念のため
     return {
         statusCode: 500,
-        headers: CORS_HEADERS,
+        headers: { 'Access-Control-Allow-Origin': '*' },
         body: JSON.stringify({ message: 'Unhandled API path or method' }),
     };
 };
