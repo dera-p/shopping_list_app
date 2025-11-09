@@ -53,7 +53,7 @@ export class KaimonoListCdkStack extends cdk.Stack {
 
     // 4. フロントエンドファイルをS3バケットにデプロイ
     new s3Deployment.BucketDeployment(this, 'DeployWebsite', {
-      sources: [s3Deployment.Source.asset('./frontend/dist')], // './frontend' から './frontend/dist' に変更
+      sources: [s3Deployment.Source.asset('./frontend')], // './frontend' フォルダの内容をデプロイ
       destinationBucket: websiteBucket,
       distribution: distribution, // CloudFrontキャッシュを無効化
       distributionPaths: ['/*'], // 全パスのキャッシュを無効化

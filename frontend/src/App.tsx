@@ -65,10 +65,12 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto p-4 max-w-lg">
-      <h1 className="text-2xl font-bold text-center my-4">Shopping List</h1>
-      <AddItemForm onAddItem={addItem} />
-      <ShoppingList items={items} onToggleDone={toggleDone} onDeleteItem={deleteItem} />
+    <div className="bg-[#f0f2f5] min-h-screen p-5">
+      <div className="max-w-xl mx-auto bg-white p-5 rounded-lg shadow-[0_2px_4px_rgba(0,0,0,0.1)]">
+        <h1 className="text-2xl font-bold text-center my-4 text-[#1d1d1f]">買い物リスト</h1>
+        <AddItemForm onAddItem={addItem} />
+        <ShoppingList items={items} onToggleDone={toggleDone} onDeleteItem={deleteItem} />
+      </div>
     </div>
   );
 };
