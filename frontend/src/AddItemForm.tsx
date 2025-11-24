@@ -16,20 +16,23 @@ const AddItemForm: React.FC<AddItemFormProps> = ({ onAddItem }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex gap-2.5 mb-5">
-      <input
-        type="text"
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        placeholder="買うものを入力..."
-        className="flex-grow p-2.5 border border-gray-300 rounded text-base"
-      />
-      <button
-        type="submit"
-        className="p-2.5 px-5 bg-[#007bff] text-white border-none rounded cursor-pointer text-base hover:bg-[#0056b3]"
-      >
-        追加
-      </button>
+    <form onSubmit={handleSubmit} className="relative">
+      <div className="flex shadow-sm rounded-lg overflow-hidden ring-1 ring-slate-200 focus-within:ring-2 focus-within:ring-indigo-500 transition-all duration-200">
+        <input
+          type="text"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          placeholder="新しいアイテムを追加..."
+          className="flex-grow px-4 py-3 text-slate-700 placeholder-slate-400 bg-white border-none outline-none focus:ring-0"
+        />
+        <button
+          type="submit"
+          disabled={!text.trim()}
+          className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-6 py-3 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          追加
+        </button>
+      </div>
     </form>
   );
 };

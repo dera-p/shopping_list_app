@@ -4,7 +4,7 @@ import AddItemForm from './AddItemForm';
 import { Item } from './types';
 
 const apiUrl = 'https://r4qdrukhog.execute-api.ap-northeast-1.amazonaws.com/prod';
-const listId = 'default-list';
+const listId = 'myFamilyList';
 
 const App: React.FC = () => {
   const [items, setItems] = useState<Item[]>([]);
@@ -15,7 +15,7 @@ const App: React.FC = () => {
 
   const loadItems = async () => {
     try {
-      const response = await fetch(`${apiUrl}/lists/${listId}/items`);
+      const response = await fetch(`${apiUrl}/lists/${listId}`);
       if (!response.ok) throw new Error('Failed to fetch items.');
       const loadedItems: Item[] = await response.json();
       setItems(loadedItems);
@@ -65,11 +65,19 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="bg-[#f0f2f5] min-h-screen p-5">
-      <div className="max-w-xl mx-auto bg-white p-5 rounded-lg shadow-[0_2px_4px_rgba(0,0,0,0.1)]">
-        <h1 className="text-2xl font-bold text-center my-4 text-[#1d1d1f]">買い物リスト</h1>
-        <AddItemForm onAddItem={addItem} />
-        <ShoppingList items={items} onToggleDone={toggleDone} onDeleteItem={deleteItem} />
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-10 px-4 sm:px-6 lg:px-8 font-sans text-slate-800">
+      <div className="max-w-md mx-auto bg-white/80 backdrop-blur-xl rounded-2xl shadow-xl overflow-hidden border border-white/50">
+        <div className="px-6 py-8 sm:p-10">
+          <h1 className="text-3xl font-extrabold text-center text-slate-900 mb-8 tracking-tight">
+            買い物リスト
+          </h1>
+          <div className="space-y-8">
+            <AddItemForm onAddItem={addItem} />
+            <div className="mt-8">
+              <ShoppingList items={items} onToggleDone={toggleDone} onDeleteItem={deleteItem} />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

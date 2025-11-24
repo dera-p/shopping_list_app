@@ -10,7 +10,7 @@ interface ShoppingListProps {
 
 const ShoppingList: React.FC<ShoppingListProps> = ({ items, onToggleDone, onDeleteItem }) => {
   return (
-    <ul className="list-none p-0">
+    <ul className="space-y-3">
       {items.map(item => (
         <ShoppingListItem
           key={item.itemId}

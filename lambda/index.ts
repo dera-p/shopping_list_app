@@ -113,7 +113,7 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
                         body: JSON.stringify(newItem),
                     };
                 } else if (!listId) {
-                     // リストの新規作成は今回対象外
+                    // リストの新規作成は今回対象外
                     return {
                         statusCode: 400,
                         headers: { 'Access-Control-Allow-Origin': '*' },
@@ -127,18 +127,23 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
                 if (listId && itemId) {
                     const body = JSON.parse(event.body || '{}');
                     const updateExpressionParts: string[] = [];
+                    const expressionAttributeNames: { [key: string]: string } = {
+                        '#U': 'updatedAt',
+                    };
                     const expressionAttributeValues: { [key: string]: any } = {};
 
                     if (body.text !== undefined) {
-                        updateExpressionParts.push('SET #T = :text');
+                        updateExpressionParts.push('#T = :text');
                         expressionAttributeValues[':text'] = body.text;
+                        expressionAttributeNames['#T'] = 'text';
                     }
                     if (body.done !== undefined) {
-                        updateExpressionParts.push('SET #D = :done');
+                        updateExpressionParts.push('#D = :done');
                         expressionAttributeValues[':done'] = body.done;
+                        expressionAttributeNames['#D'] = 'done';
                     }
 
-                    updateExpressionParts.push('SET #U = :updatedAt');
+                    updateExpressionParts.push('#U = :updatedAt');
                     expressionAttributeValues[':updatedAt'] = new Date().toISOString();
 
                     if (updateExpressionParts.length === 0) {
@@ -152,12 +157,8 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
                     const command = new UpdateCommand({
                         TableName: TABLE_NAME,
                         Key: { listId, itemId },
-                        UpdateExpression: updateExpressionParts.join(', '),
-                        ExpressionAttributeNames: {
-                            '#T': 'text',
-                            '#D': 'done',
-                            '#U': 'updatedAt',
-                        },
+                        UpdateExpression: 'SET ' + updateExpressionParts.join(', '),
+                        ExpressionAttributeNames: expressionAttributeNames,
                         ExpressionAttributeValues: expressionAttributeValues,
                         ReturnValues: "ALL_NEW", // 更新後のアイテムを返す
                     });

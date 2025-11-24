@@ -1,8 +1,13 @@
 *.js
 !jest.config.js
+!tailwind.config.js
+!postcss.config.js
 *.d.ts
 node_modules
 
 # CDK asset staging directory
 .cdk.staging
 cdk.out
+
+# frontend build output
+src/frontend/dist
