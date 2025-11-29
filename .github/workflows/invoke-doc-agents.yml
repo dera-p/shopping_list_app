@@ -1,0 +1,45 @@
+name: Invoke Documentation Agent
+
+on:
+  workflow_dispatch:
+    inputs:
+      agent:
+        description: 'Target Agent'
+        required: true
+        type: choice
+        options:
+          - frontend-doc
+          - backend-doc
+          - infra-doc
+          - readme
+          - contributing
+      instruction:
+        description: 'Instruction for the agent'
+        required: true
+        default: 'Update documentation based on recent changes.'
+        type: string
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  create_issue:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create Issue for Copilot Agent
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          AGENT: ${{ inputs.agent }}
+          INSTRUCTION: ${{ inputs.instruction }}
+        run: |
+          TITLE="[Docs] Update documentation via @$AGENT"
+          BODY="$INSTRUCTION @copilot @$AGENT"
+          
+          gh issue create \
+            --title "$TITLE" \
+            --body "$BODY" \
+            --assignee "copilot"
