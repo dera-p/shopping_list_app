@@ -11,6 +11,8 @@ const App: React.FC = () => {
 
   useEffect(() => {
     loadItems();
+    const intervalId = setInterval(loadItems, 5000);
+    return () => clearInterval(intervalId);
   }, []);
 
   const loadItems = async () => {
