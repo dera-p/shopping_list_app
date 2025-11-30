@@ -41,5 +41,4 @@ jobs:
           
           gh issue create \
             --title "$TITLE" \
-            --body "$BODY" \
-            --assignee "@copilot"
+            --body "$BODY"
