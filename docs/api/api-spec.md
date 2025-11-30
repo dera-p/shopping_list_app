@@ -7,6 +7,18 @@
 
 ## エンドポイント一覧
 
+### 共通仕様
+
+#### リクエストヘッダー
+- **X-Line-User-Id** (Optional): アクセスしているユーザーのLINE User ID。ログ出力に使用される。
+
+#### CORS (Cross-Origin Resource Sharing)
+- 全てのエンドポイントで `OPTIONS` メソッドをサポートする。
+- プリフライトリクエストに対し、以下のヘッダーを許可して `200 OK` を返す。
+    - `Access-Control-Allow-Origin`: `*`
+    - `Access-Control-Allow-Headers`: `Content-Type,X-Line-User-Id`
+    - `Access-Control-Allow-Methods`: `GET,POST,PUT,DELETE,OPTIONS`
+
 ### 1. リスト取得
 指定されたリストIDに紐づく全てのアイテムを取得する。
 
