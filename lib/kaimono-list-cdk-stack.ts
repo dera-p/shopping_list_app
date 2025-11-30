@@ -84,7 +84,7 @@ export class KaimonoListCdkStack extends cdk.Stack {
       description: 'The name of the DynamoDB table for shopping lists',
     });
 
-        // 8. Lambda関数を作成
+    // 8. Lambda関数を作成
     const apiLambda = new NodejsFunction(this, 'KaimonoListApiLambda', {
       functionName: 'KaimonoListApiHandler',
       entry: 'lambda/index.ts', // Lambda関数のソースコードのパス
@@ -112,30 +112,22 @@ export class KaimonoListCdkStack extends cdk.Stack {
       },
     });
 
-    const optionsLambda = new NodejsFunction(this, 'OptionsLambda', {
-      entry: 'lambda/options-handler.ts',
-      handler: 'handler',
-      runtime: lambda.Runtime.NODEJS_18_X,
-    });
-
-    const optionsIntegration = new apigw.LambdaIntegration(optionsLambda);
-
     // 11. API GatewayのパスとLambda関数を紐付け
     // /lists/{listId}
     const listsResource = api.root.addResource('lists');
-    listsResource.addMethod('OPTIONS', optionsIntegration);
+    listsResource.addMethod('OPTIONS', new apigw.LambdaIntegration(apiLambda));
     const listIdResource = listsResource.addResource('{listId}');
-    listIdResource.addMethod('OPTIONS', optionsIntegration);
+    listIdResource.addMethod('OPTIONS', new apigw.LambdaIntegration(apiLambda));
     listIdResource.addMethod('GET', new apigw.LambdaIntegration(apiLambda)); // GET /lists/{listId}
 
     // /lists/{listId}/items
     const itemsResource = listIdResource.addResource('items');
-    itemsResource.addMethod('OPTIONS', optionsIntegration);
+    itemsResource.addMethod('OPTIONS', new apigw.LambdaIntegration(apiLambda));
     itemsResource.addMethod('POST', new apigw.LambdaIntegration(apiLambda)); // POST /lists/{listId}/items
 
     // /lists/{listId}/items/{itemId}
     const itemIdResource = itemsResource.addResource('{itemId}');
-    itemIdResource.addMethod('OPTIONS', optionsIntegration);
+    itemIdResource.addMethod('OPTIONS', new apigw.LambdaIntegration(apiLambda));
     itemIdResource.addMethod('GET', new apigw.LambdaIntegration(apiLambda)); // GET /lists/{listId}/items/{itemId}
     itemIdResource.addMethod('PUT', new apigw.LambdaIntegration(apiLambda)); // PUT /lists/{listId}/items/{itemId}
     itemIdResource.addMethod('DELETE', new apigw.LambdaIntegration(apiLambda)); // DELETE /lists/{listId}/items/{itemId}
