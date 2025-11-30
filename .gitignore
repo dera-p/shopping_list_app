@@ -3,6 +3,7 @@
 !tailwind.config.js
 !postcss.config.js
 *.d.ts
+!frontend/src/vite-env.d.ts
 node_modules
 
 # CDK asset staging directory
@@ -10,4 +11,6 @@ node_modules
 cdk.out
 
 # frontend build output
-src/frontend/dist
+frontend/dist
+
+.env

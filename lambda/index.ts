@@ -11,6 +11,13 @@ const TABLE_NAME = process.env.TABLE_NAME || 'KaimonoList';
 
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     console.log("Received event:", JSON.stringify(event, null, 2));
+    console.log("Headers:", JSON.stringify(event.headers, null, 2));
+
+    // Log LINE User ID if present
+    const lineUserId = event.headers?.['X-Line-User-Id'] || event.headers?.['x-line-user-id'];
+    if (lineUserId) {
+        console.log("LINE User ID:", lineUserId);
+    }
 
     try {
         const path = event.path;
@@ -193,6 +200,17 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
                     };
                 }
                 break;
+
+            case 'OPTIONS':
+                return {
+                    statusCode: 200,
+                    headers: {
+                        'Access-Control-Allow-Origin': '*',
+                        'Access-Control-Allow-Headers': 'Content-Type,X-Line-User-Id',
+                        'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE,OPTIONS'
+                    },
+                    body: ''
+                };
 
             default:
                 return {
