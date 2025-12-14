@@ -16,7 +16,7 @@ on:
       instruction:
         description: 'Instruction for the agent'
         required: true
-        default: 'Update documentation based on recent changes.'
+        default: '指定されたドキュメントの作成または更新を行ってください。'
         type: string
 
 permissions:
@@ -36,10 +36,16 @@ jobs:
           AGENT: ${{ inputs.agent }}
           INSTRUCTION: ${{ inputs.instruction }}
         run: |
-          TITLE="[Docs] ドキュメントの作成または更新 via @$AGENT"
+          TITLE="[Docs] 指定されたドキュメントの作成または更新 via @$AGENT"
           BODY="$INSTRUCTION @copilot @$AGENT プルリクエストのタイトルと説明は日本語で作成してください。"
           
-          gh issue create \
+          
+          ISSUE_URL=$(gh issue create \
             --title "$TITLE" \
-            --body "$BODY" \
-            --assignee "@copilot"
+            --body "$BODY")
+          
+          echo "Created issue: $ISSUE_URL"
+          echo "Waiting for 5 seconds before assigning to trigger agent..."
+          sleep 5    
+          
+          gh issue edit "$ISSUE_URL" --add-assignee "@copilot"
