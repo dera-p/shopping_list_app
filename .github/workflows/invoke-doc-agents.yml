@@ -36,10 +36,10 @@ jobs:
           AGENT: ${{ inputs.agent }}
           INSTRUCTION: ${{ inputs.instruction }}
         run: |
-          TITLE="[Docs] Update documentation via @$AGENT"
-          BODY="$INSTRUCTION @copilot @$AGENT"
+          TITLE="[Docs] ドキュメントの作成または更新 via @$AGENT"
+          BODY="$INSTRUCTION @copilot @$AGENT プルリクエストのタイトルと説明は日本語で作成してください。"
           
           gh issue create \
             --title "$TITLE" \
             --body "$BODY" \
-            --assignee "@$AGENT"
+            --assignee "@copilot"
