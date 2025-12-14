@@ -32,7 +32,7 @@ jobs:
 
       - name: Create Issue for Copilot Agent
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.COPILOT_ASSIGN_PAT }}
           AGENT: ${{ inputs.agent }}
           INSTRUCTION: ${{ inputs.instruction }}
         run: |
@@ -41,4 +41,5 @@ jobs:
           
           gh issue create \
             --title "$TITLE" \
-            --body "$BODY"
+            --body "$BODY" \
+            --assignee "@$AGENT"
