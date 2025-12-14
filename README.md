@@ -11,8 +11,14 @@ AWS CDKを使用したサーバーレスアーキテクチャで構築されて�
 ## ドキュメント
 詳細な設計書は `docs/` ディレクトリに格納されています。
 
+### フロントエンド
+- **[フロントエンド開発ガイド](frontend/README.md)**: 開発環境のセットアップ、ビルド手順、コンポーネント仕様
+
+### 設計
 - **[画面設計書](docs/design/screen-design.md)**: UIコンポーネントと仕様
 - **[画面遷移図](docs/design/screen-transition.md)**: アプリケーションの状態遷移
+
+### API・インフラ
 - **[API仕様書](docs/api/api-spec.md)**: バックエンドAPIのエンドポイント定義
 - **[インフラ構成図](docs/infra/architecture.md)**: AWSリソース構成
 - **[データベース設計書](docs/infra/db-schema.md)**: DynamoDBテーブル設計
